@@ -35,3 +35,10 @@ intelliserve/
 │
 └── tests/                      # unit, integration, load
 - Create a project borad to track works using linear 
+
+## 2026-03-07
+- Create a virtual enviroment for the API, and understanding it 
+    - Why we need virtual env ? It creates an isolated space for each project, preventing dependency conflict bwteen differernt projects and keeping operating system global python     installation clean. 
+    - When used from within a virtual environment, common installation tools such as pip will install Python packages into a virtual environment without needing to be told to do so explicitly.
+    Activate command- source .venv/bin/activate
+    Deactivate command- deactivate
