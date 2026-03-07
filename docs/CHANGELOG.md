@@ -34,3 +34,4 @@ intelliserve/
 ├── scripts/                    # cluster and model helpers
 │
 └── tests/                      # unit, integration, load
+- Create a project borad to track works using linear 
