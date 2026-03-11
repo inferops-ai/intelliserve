@@ -1,22 +1,38 @@
-from datetime import datetime
-
+from fastapi import FastAPI
 from pydantic import BaseModel
 
+class Parameters(BaseModel):
+    max_tokens: int
+    temperature: float
+    top_p: float
+    
+class Request(BaseModel):
+    model: str
+    prompt: str
+    parameters: Parameters
+    stream: bool
+    request_id: str
 
-class User(BaseModel):
-    id: int
-    name: str = "John Doe"
-    signup_ts: datetime | None = None
-    friends: list[int] = []
+app = FastAPI()
 
+@app.post("/api/v1/infer/")
+async def create_body(body: Request):
+    return { "request_id": body.request_id, "status": "done" }
 
-external_data = {
-    "id": "123",
-    "signup_ts": "2017-06-01 12:22",
-    "friends": [1, "2", b"3"],
-}
-user = User(**external_data)
-print(user)
-# > User id=123 name='John Doe' signup_ts=datetime.datetime(2017, 6, 1, 12, 22) friends=[1, 2, 3]
-print(user.id)
-# > 123
+@app.get("/api/v1/infer/")
+async def get_responce(id):
+    return {
+        "request_id": id,
+        "model": "llama-3.2-1b",
+        "output": "Kubernetes is a system that automates...",
+        "usage": {
+            "prompt_tokens": 9,
+            "completion_tokens": 87,
+            "total_tokens": 96
+        },
+        "latency_ms": 340,
+        "cached": False
+    }
+    
+#Integrate with redis
+
