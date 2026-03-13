@@ -103,3 +103,35 @@ Client          Gateway           Model           Redis
     command - uvicorn main:app or fastapi dev
 - endpoints for POST: /api/v1/infer
 - endpoint for GET: /api/v1/infer/request_id
+
+## 026-03-12
+Redis catche 
+
+Cache 1 — Async Result Store
+Keyed by request_id. Created when a job is dispatched, read during polling.
+Fields:
+status — pending, processing, completed, or failed
+response — the inference output
+model — which model handled it
+created_at — when the request arrived
+completed_at — when inference finished
+error — populated only on failure
+
+Cache 2 — Prompt Deduplication Store
+Keyed by a SHA-256 hash of the prompt. Checked before dispatching any job.
+Fields:
+request_id — pointer to the full result in Cache 1
+model — which model produced it
+
+If there's a hit, the gateway returns the cached response immediately and never touches the inference engine.
+
+The combined flow:
+
+The corrected flow on a cache hit:
+
+Request arrives with a prompt
+Gateway hashes the prompt → checks Cache 2
+Hit → retrieve request_id from Cache 2 → use it to fetch the full result from Cache 1 → return response to client
+Miss → generate new request_id, dispatch to inference engine, write result to Cache 1, write prompt_hash → request_id to Cache 2
+
+Both caches live in the same Redis instance, just under different key patterns — something like infer:{request_id} for Cache 1 and prompt:{sha256hash} for Cache 2. And both should have a TTL set via expire after writing.
