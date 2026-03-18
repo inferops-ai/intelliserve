@@ -1,0 +1,9 @@
+services:
+  redis-server:
+    image: 'redis'
+  api-getway:
+    build: .
+    env_file:
+      - ./.env
+    ports:
+      - "8000:80"
