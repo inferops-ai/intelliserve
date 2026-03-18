@@ -104,7 +104,7 @@ Client          Gateway           Model           Redis
 - endpoints for POST: /api/v1/infer
 - endpoint for GET: /api/v1/infer/request_id
 
-## 026-03-12
+## 2026-03-12
 Redis catche 
 
 Cache 1 — Async Result Store
@@ -135,3 +135,35 @@ Hit → retrieve request_id from Cache 2 → use it to fetch the full result fro
 Miss → generate new request_id, dispatch to inference engine, write result to Cache 1, write prompt_hash → request_id to Cache 2
 
 Both caches live in the same Redis instance, just under different key patterns — something like infer:{request_id} for Cache 1 and prompt:{sha256hash} for Cache 2. And both should have a TTL set via expire after writing.
+
+## 2026-03-17 
+Containerize the the api-gateway using DOCKER
+To create a dockerfile, needed to create a Dockerfile inside the app directory
+FROM - Defines the base image to start the build process from
+WORKDIR - Create a working directory inside the docker image file system
+COPY - Copy files or directories from the host machine in to image file system
+RUN - Run command, typically for creating a package or updating a script
+CMD - Default command to run when the container starts 
+
+Docker Cli -    docker build -t app-gateway . (To build the container)
+           -    docker run --env-file .env -p 8000:80 app-gateway (Run the container and map the localhost 8000 port with 80 conatiner port and use .env file from local and inject the values at runtime)
+
+---> When you run a Docker container, it's like a mini isolated computer inside your real computer. It has its own network, its own filesystem, its own localhost.
+So when your gateway code says "connect to localhost:6379", it means "connect to port 6379 on this container's localhost" — not your actual machine's localhost where Redis is running.
+It's like two separate houses. Shouting "come to my living room" from house A doesn't bring someone from house B — they're in different buildings.
+The three scenarios:
+
+Before Docker — everything ran on your actual machine, so localhost meant the same thing to everyone. Gateway and Redis were in the same "house."
+Gateway in Docker, Redis on host — they're in different "houses." host.docker.internal is essentially a bridge between them, a special address that means "go back to the real machine."
+Both in Docker Compose — they're in the same "neighbourhood" with a shared internal network. Each service gets a name, and they find each other by that name instead of localhost. This is the cleanest setup.
+
+That's fundamentally the networking problem Docker Compose solves — it puts all your services on the same internal network so they can talk to each other naturally.
+
+To solve this problem we need dockercompose 
+Docker Compose - Used to make a communication between two containers 
+               - It protect us writing repetative docker-cli command multiple times
+               - Easly startup multiple container at the same time and connect them together 
+               - docker-compose.yaml to create docker compose file 
+    docker-compose.yaml --> services - are the containers we need to create and run
+        compose command - docker-compose up --build -> to build an image and run it 
+                        - docker-compose up -> to run the container

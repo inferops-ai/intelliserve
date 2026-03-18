@@ -9,7 +9,7 @@ from pydantic import BaseModel
 load_dotenv()
 
 #Connect with redis
-client_redis = redis.Redis(host=os.getenv("LOCAL_HOST"), port=os.getenv("PORT"), decode_responses=True)
+client_redis = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
 
 #Remove spaces and lowercase the string 
 def normaliz_str(str_val):
