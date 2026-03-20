@@ -167,3 +167,13 @@ Docker Compose - Used to make a communication between two containers
     docker-compose.yaml --> services - are the containers we need to create and run
         compose command - docker-compose up --build -> to build an image and run it 
                         - docker-compose up -> to run the container
+
+## 2026-03-19
+Research: Transformers, Fine-tuning, and DistilBERT for Intent Classifier
+Transformers - Attention, instadfe of reading the text sequentially, it looks all the words at once and asks: "For each word in this sentence, which other words should I pay attention to in order to understand it?"
+Multi-head attention runs this process in parallel several times. 
+BERT - Bidirectional Encoder Representations from Transformers - Reads in both directions simultaneously.
+BERT Learned from massive text using two self-supervised tasks
+    - Masked language modeling 
+    - Next sentence prediction
+After pre-training, BERT has rich, general-purpose language representations baked into its weights. You then fine-tune it on your specific task by adding a small task-specific head on top and training on your labeled data.
