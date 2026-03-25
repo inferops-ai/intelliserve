@@ -14,6 +14,8 @@ intelliserve/
 ├── services/                   # Three microservices
 │   ├── api-gateway/                #Handle requests 
 │   ├── intent-classifier/          #AI model
+|       ├── data/                       # datasets and eval sets
+│
 │   └── inference-engine/           #Loads and generates the responce
 │
 ├── k8s/                        # Kubernetes manifests
@@ -27,8 +29,7 @@ intelliserve/
 │
 ├── notebooks/                  # fine-tuning and experiments
 │
-├── data/                       # datasets and eval sets
-│
+|
 ├── docs/                       # architecture and decisions
 │
 ├── scripts/                    # cluster and model helpers
@@ -38,7 +39,7 @@ intelliserve/
 
 ## 2026-03-07
 - Create a virtual enviroment for the API, and understanding it 
-    - Why we need virtual env ? It creates an isolated space for each project, preventing dependency conflict bwteen differernt projects and keeping operating system global python     installation clean. 
+    - Why we need virtual env ? It creates an isolated space for each project, preventing dependency conflict bewteen differernt projects and keeping operating system global python     installation clean. 
     - When used from within a virtual environment, common installation tools such as pip will install Python packages into a virtual environment without needing to be told to do so explicitly.
     Activate command- source .venv/bin/activate
     Deactivate command- deactivate 
@@ -170,10 +171,49 @@ Docker Compose - Used to make a communication between two containers
 
 ## 2026-03-19
 Research: Transformers, Fine-tuning, and DistilBERT for Intent Classifier
-Transformers - Attention, instadfe of reading the text sequentially, it looks all the words at once and asks: "For each word in this sentence, which other words should I pay attention to in order to understand it?"
+Transformers - Attention, instade of reading the text sequentially, it looks all the words at once and asks: "For each word in this sentence, which other words should I pay attention to in order to understand it?"
 Multi-head attention runs this process in parallel several times. 
 BERT - Bidirectional Encoder Representations from Transformers - Reads in both directions simultaneously.
 BERT Learned from massive text using two self-supervised tasks
     - Masked language modeling 
     - Next sentence prediction
 After pre-training, BERT has rich, general-purpose language representations baked into its weights. You then fine-tune it on your specific task by adding a small task-specific head on top and training on your labeled data.
+
+## 2026-03-24
+How DistlBERT works 
+Your text:   "Book me a flight"
+     ↓
+Tokenizer:   [CLS] book me a flight [SEP]  →  [101, 2338, 2033, 1037, 3462, 102]
+     ↓
+DistilBERT:  Every token talks to every other token
+     ↓
+[CLS] output: A summary of the whole sentence (768 numbers)
+     ↓
+Classifier:  "This is a book_flight intent" ✅
+
+Tokenization - Coverts texts into numerical format so the model can process
+[CLS] - The model learns to use as a summary token 
+
+Created a file in intent-classfier microservice 
+1. config.py — Start here, no dependencies
+Define your label mappings, model checkpoint, num_labels, max_length, and output path. Everything else imports from this file so it needs to exist first.
+2. dataset.py — Maps to INT-28
+Write your tokenization logic and data loading here. It imports the tokenizer config from config.py. Use a small toy dataset at this stage — real intent data comes later.
+3. train.py — Maps to INT-27, INT-29, INT-30
+This is the bulk of your current tickets. It imports from both config.py and dataset.py. By the end of INT-30 you'll have a fine-tuned model saved to disk.
+4. classifier.py — After training is done
+Loads the saved fine-tuned model and exposes a classify(text) function. You can't write this meaningfully until train.py has produced a model checkpoint.
+5. app.py — Last
+The FastAPI layer that wraps classifier.py and exposes the /classify endpoint. This is the final step before wiring the microservice into IntelliServe.
+
+Created a dataset
+240 examples — 40 per class: 6 labels 
+-------------------------------------------------------------------------------------------------
+text_generation     |  Wide variety — stories, poems, emails, speeches, slogans, reviews
+summarization       |  Covers papers, meetings, transcripts, books, legal docs, reports
+question_answering  |  Mix of factual, conceptual, and technical questions
+code_generation     |  Multiple languages — Python, SQL, JS, Bash, YAML, Terraform, Rust
+translation         |  15+ language pairs, different document types and formality levels
+chitchat            |  Natural conversational tone — emotional, curious, playful, philosophical
+--------------------------------------------------------------------------------------------------
+

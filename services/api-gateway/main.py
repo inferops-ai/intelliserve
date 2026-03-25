@@ -57,7 +57,7 @@ async def create_body(body: Request):
             'status': 'completed',
             'responce': 'Kubernetes is a system that automates...',
             'model': body.model,
-            'created_at': 'Where the request created',
+            'created_at': 'When the request created',
             'completed_at': 'When the request is completed',
             'error': 'error'
         })
