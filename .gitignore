@@ -1,2 +1,4 @@
 services/api-gateway/.env
-services/intent-classifier/models
+services/intent-classifier/models/
+**/*.bin
+**/*.safetensors
