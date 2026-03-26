@@ -1,4 +1,7 @@
 services/api-gateway/.env
+services/api-gateway/.venv/
 services/intent-classifier/models/
+services/intent-classifier/venv-classifier/
+**/__pycache__/
 **/*.bin
 **/*.safetensors
