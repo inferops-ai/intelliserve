@@ -9,8 +9,17 @@ LABEL_TO_ID = {
     "chitchat": 5
 }
 
+ID_TO_LABEL = {
+    0: "text_generation",
+    1: "summarization",
+    2: "question_answering",
+    3: "code_generation",
+    4: "translation",
+    5: "chitchat"
+}
+
 #Length of the labels
-NUM_LABLES = len(LABEL_TO_ID)
+NUM_LABELS = len(LABEL_TO_ID)
 
 #Tokenizer trancation length 
 MAX_LENGTH = 128
@@ -18,6 +27,7 @@ MAX_LENGTH = 128
 #Paths for different files 
 DATA_PATH = "data/intents_dataset.csv"
 MODEL_OUTPUT_DIR = "models/intent-classifier"
+LOGGING_DIR = "logs"
 
 #Model for loading 
 MODEL_CHECKPOINT = "distilbert-base-uncased"

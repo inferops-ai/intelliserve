@@ -1,1 +1,2 @@
 services/api-gateway/.env
+services/intent-classifier/models
