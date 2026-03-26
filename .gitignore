@@ -5,3 +5,4 @@ services/intent-classifier/venv-classifier/
 **/__pycache__/
 **/*.bin
 **/*.safetensors
+allfiles.txt
