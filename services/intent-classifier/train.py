@@ -1,6 +1,6 @@
 import config
 import numpy as np
-from dataset import get_datasets
+from dataset import get_datasets, tokenizer
 from transformers import AutoModelForSequenceClassification, Trainer, TrainingArguments, EvalPrediction
 from sklearn.metrics import accuracy_score, f1_score
 
@@ -40,6 +40,9 @@ trainer = Trainer(
 )
 
 trainer.train()
+trainer.save_model(config.MODEL_OUTPUT_DIR)
+tokenizer.save_pretrained(config.MODEL_OUTPUT_DIR)
+
 print("Starting evaluation ...")
 result_eval = trainer.evaluate()
 print(result_eval)
