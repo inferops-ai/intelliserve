@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 load_dotenv()
-
+app = FastAPI()
 #Connect with redis
 client_redis = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
 
@@ -36,8 +36,6 @@ class Request(BaseModel):
     prompt: str
     parameters: Parameters
     stream: bool
-
-app = FastAPI()
 
 @app.post("/api/v1/infer/")
 async def create_body(body: Request):
@@ -82,6 +80,13 @@ async def get_responce(id):
         },
         "latency_ms": 340,
         "cached": True
+    }
+    
+#for kuberentes to check the app is running 
+@app.get("/health")
+def check_health():
+    return {
+        "status": "ok"
     }
     
 

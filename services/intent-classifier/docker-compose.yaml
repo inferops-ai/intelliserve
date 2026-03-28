@@ -1,0 +1,5 @@
+services:
+  intent_classifier:
+    build: .
+    ports:
+      - "8001:80"
