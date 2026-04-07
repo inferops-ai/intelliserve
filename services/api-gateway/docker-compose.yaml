@@ -1,8 +1,17 @@
 services:
   redis-server:
     image: 'redis'
-  api-getway:
+  intent-classifier:
+    build: ../intent-classifier
+    volumes: 
+      - ../intent-classifier/models:/intent_classifier/models
+  api-gateway:
     build: .
+    depends_on:
+      redis-server:
+        condition: service_started
+      intent-classifier:
+        condition: service_started
     env_file:
       - ./.env
     ports:

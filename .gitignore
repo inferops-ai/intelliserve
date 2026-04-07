@@ -1,5 +1,5 @@
 services/api-gateway/.env
-services/api-gateway/.venv/
+services/api-gateway/venv-gateway/
 services/intent-classifier/models/
 services/intent-classifier/venv-classifier/
 **/__pycache__/
