@@ -26,7 +26,7 @@ MAX_LENGTH = 128
 
 #Paths for different files 
 DATA_PATH = "data/intents_dataset.csv"
-MODEL_OUTPUT_DIR = "models/intent-classifier"
+MODEL_OUTPUT_DIR = "/intent_classifier/models/intent-classifier"
 LOGGING_DIR = "logs"
 
 #Model for loading 

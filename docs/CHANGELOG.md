@@ -218,4 +218,11 @@ chitchat            |  Natural conversational tone — emotional, curious, playf
 --------------------------------------------------------------------------------------------------
 
 ## 2026-03-26
-Worked on dataset.py, train.py and classifier.py
+Worked on dataset.py, train.py, config.py, classifier.py and main.py - Intent classifier 
+Config.py - save the constants 
+Dataset.py - will take the training dataset and prepare it to classifier model by tokenizing the training dataset and the evaluation dataset (test dataset)
+Train.py - Will train the model by taking the tokenized dataset from Dataset.py and save the model in model directory (Build in distlbert model)
+Classifier.py - Classify method that will take text and classifiy the it into intent 
+Main.py - Gateway to acess classifier method
+
+To connect the api-gateway and intent classifier, the microservices should be on the same network meaning inluding intent classifier in api-gateway docker compose to create an image so all the app can be accessed through api-getway

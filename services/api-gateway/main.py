@@ -1,6 +1,7 @@
 import uuid
 import hashlib
 import os
+import httpx
 from dotenv import load_dotenv
 import redis.asyncio as redis
 from fastapi import FastAPI
@@ -47,6 +48,12 @@ async def create_body(body: Request):
     
     # check the prompt hash exist in the redis in catche 2 
     check_cache = await client_redis.hgetall(f'prompt:{hashed_prompt}')
+    
+    #Call the intent classifier endpoint to get the intent 
+    async with httpx.AsyncClient() as client:
+        intent_responce = await client.post(os.getenv("INTENT_ENDPOINT"), json={"prompt":prompt})
+    intent_responce = intent_responce.json()
+    
     #if exist return the request id,else if not add new cache 1 and cache 2 with responce and return the request id 
     if len(check_cache):
         return { "request_id":check_cache['request_id'], "status":"done"}
@@ -54,6 +61,8 @@ async def create_body(body: Request):
         await client_redis.hset(f'infer:{str(uuid_id)}',mapping={
             'status': 'completed',
             'responce': 'Kubernetes is a system that automates...',
+            'intent': intent_responce['intent'],
+            'confidence': intent_responce['confidence'],
             'model': body.model,
             'created_at': 'When the request created',
             'completed_at': 'When the request is completed',
@@ -79,7 +88,10 @@ async def get_responce(id):
             "total_tokens": 96
         },
         "latency_ms": 340,
-        "cached": True
+        "cached": True,
+        #For debug purpose for now, I dont need this responces for client
+        "intent": client_responce['intent'],
+        "confidence": client_responce['confidence']
     }
     
 #for kuberentes to check the app is running 
