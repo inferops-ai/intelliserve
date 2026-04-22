@@ -5,6 +5,10 @@ services:
     build: ../intent-classifier
     volumes: 
       - ../intent-classifier/models:/intent_classifier/models
+  inference-engine:
+    build: ../inference-engine
+    env_file:
+      - ../inference-engine/.env
   api-gateway:
     build: .
     depends_on:
