@@ -2,7 +2,8 @@ services/api-gateway/.env
 services/api-gateway/venv-gateway/
 services/intent-classifier/models/
 services/intent-classifier/venv-classifier/
-services/inference-engine/venv-engine
+services/inference-engine/venv-engine/
+services/inference-engine/.env
 **/__pycache__/
 **/*.bin
 **/*.safetensors
