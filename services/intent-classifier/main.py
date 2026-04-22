@@ -1,14 +1,18 @@
 import asyncio
+import os 
+from dotenv import load_dotenv
+from pathlib import Path
 from fastapi import FastAPI
 from pydantic import BaseModel
 from classifier import classify_text
 
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
 
 class Request(BaseModel):
     prompt: str
 
-@app.post("/api/v1/intent")
+@app.post(os.getenv("INTENT_PATH"))
 async def get_classify(body: Request):
     prompt = body.prompt
     
@@ -25,7 +29,7 @@ async def get_classify(body: Request):
         "confidence": confidence
     }
 
-@app.get("/health")
+@app.get(os.getenv("CHECK_HEALTH"))
 def check_health():
     return {
         "status":"ok",

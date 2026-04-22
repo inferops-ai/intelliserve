@@ -1,10 +1,14 @@
 # FastAPI app, lifespan, + all routes
 import asyncio
+import os
+from dotenv import load_dotenv
+from pathlib import Path
 from fastapi import FastAPI
 from pydantic import BaseModel
 from model_loader import inference_engine
 from inference import inference_template
 
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
 
 class Parameters(BaseModel):
@@ -18,7 +22,7 @@ class Request(BaseModel):
     intent_classifier: str
     parameters: Parameters
 
-@app.post("/api/v1/inference")
+@app.post(os.getenv("INFERENCE_PATH"))
 async def get_responce(body: Request):
     model_engine = body.model
     prompt = body.prompt
@@ -50,7 +54,7 @@ async def get_responce(body: Request):
         "cached": False
     }
 
-@app.get("/health")
+@app.get(os.getenv("CHECK_HEALTH"))
 def check_health():
     return {
         "status":"ok",

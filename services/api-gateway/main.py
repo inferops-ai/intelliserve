@@ -4,11 +4,12 @@ import os
 import httpx
 import time
 from dotenv import load_dotenv
+from pathlib import Path
 import redis.asyncio as redis
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
 #Connect with redis
 client_redis = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
@@ -39,7 +40,7 @@ class Request(BaseModel):
     parameters: Parameters
     stream: bool
 
-@app.post("/api/v1/infer/")
+@app.post(os.getenv("GATEWAY_PATH"))
 async def create_body(body: Request):
     #Create a unique id for the request id 
     uuid_id = uuid.uuid4()
@@ -95,7 +96,7 @@ async def create_body(body: Request):
         await client_redis.expire(f'prompt:{hashed_prompt}', 900)
     return {"request_id": str(uuid_id), "status":"done"}
 
-@app.get("/api/v1/infer/")
+@app.get(os.getenv("GATEWAY_PATH"))
 async def get_responce(id):
     client_responce = await client_redis.hgetall(f'infer:{id}')
     return {

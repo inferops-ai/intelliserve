@@ -5,10 +5,12 @@ services:
     build: ../intent-classifier
     volumes: 
       - ../intent-classifier/models:/intent_classifier/models
+    env_file:
+      - ../.env
   inference-engine:
     build: ../inference-engine
     env_file:
-      - ../inference-engine/.env
+      - ../.env
   api-gateway:
     build: .
     depends_on:
@@ -17,6 +19,6 @@ services:
       intent-classifier:
         condition: service_started
     env_file:
-      - ./.env
+      - ../.env
     ports:
       - "8000:80"

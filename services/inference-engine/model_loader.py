@@ -1,9 +1,10 @@
 # Loads model + tokenizer at startup
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
 def inference_engine(model_engine, prompt, classifier_content, parameters):
     tokenzier = AutoTokenizer.from_pretrained(
