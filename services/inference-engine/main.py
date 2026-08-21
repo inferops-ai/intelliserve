@@ -11,6 +11,9 @@ from inference import inference_template
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
 
+#Help accept multiple request - single thread with concurrent exe
+request_lock = asyncio.Lock()
+
 class Parameters(BaseModel):
     max_tokens: int
     temperature: float
@@ -34,14 +37,15 @@ async def get_responce(body: Request):
     
     async_call = asyncio.get_running_loop()
     
-    response, prompt_tokens, completion_tokens, total_tokens = await async_call.run_in_executor(
-        None,
-        inference_engine,
-        model_engine, 
-        prompt,
-        classifier_content,
-        parameters
-    )
+    async with request_lock:
+        response, prompt_tokens, completion_tokens, total_tokens = await async_call.run_in_executor(
+                None,
+                inference_engine,
+                model_engine, 
+                prompt,
+                classifier_content,
+                parameters
+        )
     
     return {
         "model": model_engine,

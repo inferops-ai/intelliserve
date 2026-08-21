@@ -37,6 +37,7 @@ def inference_engine(model_engine, prompt, classifier_content, parameters):
         top_p=parameters.top_p,
         do_sample=True  
     )
+    
     response = tokenzier.decode(outputs[0][inputs["input_ids"].shape[-1]:], skip_special_tokens=True)
     
     #Count prompt tokens

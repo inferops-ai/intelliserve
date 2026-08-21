@@ -73,6 +73,7 @@ async def create_body(body: Request):
                 }
             })
         inference_responce = inference_responce.json()
+        
         end_time = time.time()
             
         await client_redis.hset(f'infer:{str(uuid_id)}',mapping={

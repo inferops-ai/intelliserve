@@ -226,3 +226,5 @@ Classifier.py - Classify method that will take text and classifiy the it into in
 Main.py - Gateway to acess classifier method
 
 To connect the api-gateway and intent classifier, the microservices should be on the same network meaning inluding intent classifier in api-gateway docker compose to create an image so all the app can be accessed through api-getway
+
+## 2026-05-03

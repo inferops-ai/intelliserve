@@ -18,6 +18,8 @@ services:
         condition: service_started
       intent-classifier:
         condition: service_started
+      inference-engine:
+        condition: service_started
     env_file:
       - ../.env
     ports:
