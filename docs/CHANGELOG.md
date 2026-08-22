@@ -227,4 +227,27 @@ Main.py - Gateway to acess classifier method
 
 To connect the api-gateway and intent classifier, the microservices should be on the same network meaning inluding intent classifier in api-gateway docker compose to create an image so all the app can be accessed through api-getway
 
-## 2026-05-03
+## 2026-08-21
+Kuberentes 
+Containerization helps application to be realsed and update without downtime. 
+Kuberentes makesure containerized applications run where and when you want, and help them find the resource and tools they need to work.
+Open source container orchestration engine to AUTOMATING DEPLOYEMNT, SCALING AND MANAGMENT.
+    - Automating - Get my app running, pod dies it will route to replace the pod with user doing anything 
+    - Scaling - Handle less or more traffics, as load goes up or down, add or remove copies of pod authomatically. 
+    - Managment - keep the whole system healthy, check the health of a pod.
+ Kuberentes cluster consisites of two types of resources 
+    - Control Plane - Coordinates the cluster(managing the cluster). It corrdinate all activities in cluster. Scheduling applications, maintaing applictions desired states, scaling applications and rolling out new updates.
+    Components of CONTROL PLANE 
+        - kube-apiserver - means of interactions between different componenets. Commans using kubectl communicate to nodes through the api server.
+        - etcd - Store data (database). key-value store, like what deployemnt exist, how many replicas they want, which pods runing where, current config maps and secrets. If etcd data is lost the cluster will forgot it was supposed to be running. 
+        - kube-scheduler - Watch for newly created PODs that dont have node assigned yet. Decide which worker node they should run on. Only decide placement - it doesn't actually start the conatiner. Write the decision back to etcd via API server
+        - kube-controller manager - controllers bundled into one process, each responsible for constantly comparing "what you asked for" vs "whats actually running" and correcting drift. 
+    - Nodes - Workers that runs applications. 
+        - kubelet - Focused on running conatiner, making sure container starts and if container dies it notices and restart it.
+        - kube-proxy - Create a network with other pods, works with traffic. 
+    Pods - a running container, smallest deployable units of computing that you can create and manage in kubernetes.
+    Deployment - manages a set of pods to run an application workload, used for version control. Deployment create replicaset which make pods 
+    Service - Pods ip address change constantly so services gives stable communication between different pods. IP address of pods changes when pod die and restart so it will be hard to create a stable communication between the pods so service will make it easier for communition. 
+    
+
+
