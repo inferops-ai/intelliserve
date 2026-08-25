@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: intelliserve-config 
+  namespace: intelliserve
+data:
+  REDIS_HOST: "redis-server"
+  REDIS_PORT: "6379"
+  INTENT_ENDPOINT: "http://intent-classifier:80/api/v1/intent"
+  INFERENCE_ENDPOINT: "http://inference-engine:80/api/v1/inference"
+  GATEWAY_PATH: "/api/v1/infer/"
+  INFERENCE_PATH: "/api/v1/inference"
+  INTENT_PATH: "/api/v1/intent"
+  CHECK_HEALTH: "/health"
