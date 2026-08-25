@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intent-deployment
+  namespace: intelliserve
+  labels:
+    app: intent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intent
+  template:
+    metadata:
+      labels:
+        app: intent
+    spec:
+      containers:
+      - name: intent
+        image: api-gateway-intent-classifier:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+
