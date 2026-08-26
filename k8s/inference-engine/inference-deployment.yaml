@@ -24,3 +24,5 @@ spec:
         envFrom:
         - configMapRef:
             name: intelliserve-config
+        - secretRef:
+            name: inference-token-secret
