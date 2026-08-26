@@ -4,7 +4,7 @@ metadata:
   name: intelliserve-config 
   namespace: intelliserve
 data:
-  REDIS_HOST: "redis-server"
+  REDIS_HOST: "redis-service"
   REDIS_PORT: "6379"
   INTENT_ENDPOINT: "http://intent-service/api/v1/intent"
   INFERENCE_ENDPOINT: "http://inference-service/api/v1/inference"
