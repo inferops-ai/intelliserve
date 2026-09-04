@@ -57,7 +57,7 @@ async def create_body(body: Request):
     else:
         start_time = time.time()
         #Call the intent classifier endpoint to get the intent 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
             intent_responce = await client.post(os.getenv("INTENT_ENDPOINT"), json={"prompt":prompt})
         intent_responce = intent_responce.json()
     

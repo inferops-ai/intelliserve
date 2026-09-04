@@ -1,0 +1,11 @@
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: proxy-timeouts
+  namespace: intelliserve
+spec:
+  snippets:
+    - context: http.server.location
+      value: |
+        proxy_send_timeout 400s;
+        proxy_read_timeout 400s;

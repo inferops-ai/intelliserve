@@ -26,3 +26,10 @@ spec:
             name: intelliserve-config
         - secretRef:
             name: inference-token-secret
+        # resources:
+        #   requests:
+        #     cpu: "4"
+        #     memory: "2500Mi"
+        #   limits:
+        #     cpu: "6"
+        #     memory: "3Gi"

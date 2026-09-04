@@ -24,4 +24,11 @@ spec:
         envFrom:
         - configMapRef:
             name: intelliserve-config
+        # resources:
+        #   requests: 
+        #     cpu: "600m"
+        #     memory: "400Mi"
+        #   limits:
+        #     cpu: "700m"
+        #     memory: "512Mi"
 
