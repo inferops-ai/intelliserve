@@ -6,13 +6,23 @@ import time
 from dotenv import load_dotenv
 from pathlib import Path
 import redis.asyncio as redis
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
 #Connect with redis
 client_redis = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
+
+# For readiness prob - checking redis is ready
+async def checking_redis():
+    redis_ready = False
+    try:
+        await client_redis.ping()
+        redis_ready = True
+    except Exception:
+        pass
+    return redis_ready
 
 #Remove spaces and lowercase the string 
 def normaliz_str(str_val):
@@ -112,9 +122,17 @@ async def get_responce(id):
         "latency_ms": round((float(client_responce['completed_at'])-float(client_responce['created_at'])) * 1000, 2),
         "cached": True,
     }
+
+#Readiness probe
+@app.get(os.getenv("CHECK_READINESS"))
+def check_ready():
+    if checking_redis():
+        return { "status":"ok"}
+    else:
+        raise HTTPException(status_code=503, detail="Model is not loaded yet")
     
-#for kuberentes to check the app is running 
-@app.get("/health")
+#Liveness probe 
+@app.get(os.getenv("CHECK_LIVENESS"))
 def check_health():
     return {
         "status": "ok"

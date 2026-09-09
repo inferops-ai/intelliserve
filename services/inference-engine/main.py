@@ -3,9 +3,9 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from model_loader import inference_engine
+from model_loader import inference_engine, model_ready
 from inference import inference_template
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
@@ -57,8 +57,17 @@ async def get_responce(body: Request):
         },
         "cached": False
     }
+  
+# Readiness probe  
+@app.get(os.getenv("CHECK_READINESS"))
+def check_ready():
+    if model_ready:
+        return { "status":"ok", "model":"Llama-inference-engine" }
+    else:
+        raise HTTPException(status_code=503, detail="Model is not loaded yet")
 
-@app.get(os.getenv("CHECK_HEALTH"))
+# Liveness probe
+@app.get(os.getenv("CHECK_LIVENESS"))
 def check_health():
     return {
         "status":"ok",

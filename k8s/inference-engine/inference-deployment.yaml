@@ -26,6 +26,26 @@ spec:
             name: intelliserve-config
         - secretRef:
             name: inference-token-secret
+        startupProbe:
+          httpGet:
+            path: /live
+            port: 80
+          periodSeconds: 5
+          failureThreshold: 24
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 8
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 8
         # resources:
         #   requests:
         #     cpu: "4"

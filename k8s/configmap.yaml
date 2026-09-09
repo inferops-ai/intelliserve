@@ -11,4 +11,5 @@ data:
   GATEWAY_PATH: "/api/v1/infer/"
   INFERENCE_PATH: "/api/v1/inference"
   INTENT_PATH: "/api/v1/intent"
-  CHECK_HEALTH: "/health"
+  CHECK_READINESS: "/ready"
+  CHECK_LIVENESS: "/live"
