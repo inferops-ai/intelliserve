@@ -4,8 +4,13 @@ import numpy as np
 import torch.nn.functional as F
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+# Checking the model is ready
+model_ready = False
+
 tokenizer = AutoTokenizer.from_pretrained(config.MODEL_CHECKPOINT)
 model = AutoModelForSequenceClassification.from_pretrained(config.MODEL_OUTPUT_DIR)
+
+model_ready = True
 
 #switches model to inference mode, disable dropout
 model.eval()

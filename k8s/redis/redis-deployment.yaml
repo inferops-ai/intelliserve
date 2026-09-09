@@ -20,4 +20,25 @@ spec:
         image: redis:latest 
         ports:
         - containerPort: 6379
+        readinessProbe:
+          exec:
+            command:
+              - redis-cli 
+              - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+              - redis-cli
+              - ping 
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        # resources:
+        #   requests:
+        #     cpu: "10m"
+        #     memory: "16Mi"
+        #   limits:
+        #     cpu: "50m"
+        #     memory: "64Mi"
         

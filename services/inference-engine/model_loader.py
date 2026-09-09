@@ -6,16 +6,24 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
-def inference_engine(model_engine, prompt, classifier_content, parameters):
-    tokenzier = AutoTokenizer.from_pretrained(
+model_engine = 'meta-llama/Llama-3.2-1B-Instruct'
+
+# Checking the model is ready 
+model_ready = False
+
+tokenzier = AutoTokenizer.from_pretrained(
         model_engine,
         token=os.getenv("HF_TOKEN")
     )
-    model = AutoModelForCausalLM.from_pretrained(
+model = AutoModelForCausalLM.from_pretrained(
         model_engine,
         quantization_config=BitsAndBytesConfig(load_in_8bit=True),
         token=os.getenv("HF_TOKEN")
     )
+
+model_ready = True
+
+def inference_engine(model_engine,prompt, classifier_content, parameters):
     
     message = [
         {"role": "system", "content": classifier_content},
