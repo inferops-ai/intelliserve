@@ -248,6 +248,23 @@ Open source container orchestration engine to AUTOMATING DEPLOYEMNT, SCALING AND
     Pods - a running container, smallest deployable units of computing that you can create and manage in kubernetes.
     Deployment - manages a set of pods to run an application workload, used for version control. Deployment create replicaset which make pods 
     Service - Pods ip address change constantly so services gives stable communication between different pods. IP address of pods changes when pod die and restart so it will be hard to create a stable communication between the pods so service will make it easier for communition. 
+    - Created a name space called Inteliserve to separate the project from other pods and allocate resource for all the pods (CPU and memory). Since I am working on computer with limited resources I having a problem assign resources for the pods available. (One of the problem I have with allocating a resource is when I rolling update to my deployments it create an OOM since the old pods will be there until the new updated runs fine and this created a memory overload from both pods so it stops the replicaset creating a new pod.)
+    - Created a deployment for every services (gateway-api, intent classifier, inference engine and redis)
+    - Adding service so the pods can communicate, however, because of the way the application implemented only the GATEWAY api need to reach all the other services, the other services can not communicated with other, so I implmented a network policy so the services only needed to be access through the gateway api. (Ingress). For network policy to work I need to change the CNI(Container network interface) the default CNI in kuberenets does not have network policy so I install and config Calico 
+    https://docs.tigera.io/calico/latest/getting-started/kubernetes/kind
+    - Adding the readiness and livness probe for every services - but encounter problem. The problem and solution is listed below. 
+Problem:
+Your inference pod was stuck in CrashLoopBackOff. The inference container needs 70-100 seconds to load LLaMA 3.2-1B and apply INT8 quantization, and during that entire window nothing was listening on port 80 — likely because your app starts the web server after the model finishes loading, rather than before. With only a livenessProbe configured (delay=5s period=5s failureThreshold=8, a ~45s budget), kubelet started hitting /live well before the server was up, got connection refused on every attempt, hit the failure threshold, and killed the container (exit code 137, SIGKILL) — restarting it and repeating the cycle indefinitely. Adding a readinessProbe alone didn't fix this, since readiness only pulls a pod from Service traffic on failure; it doesn't stop liveness from killing the container.
+
+Solution:
+Added a startupProbe targeting /live, with periodSeconds: 5 and failureThreshold: 24 (a 120s total budget). While the startup probe hasn't yet succeeded once, kubelet holds off evaluating both liveness and readiness entirely — so the slow model load no longer triggers a kill. Once /live responds successfully, startup is marked complete and liveness/readiness take over on their normal, tighter schedules. Result: the pod now comes up 1/1 Running, Ready: True, Restart Count: 0.
+
+Open item worth addressing: the deeper cause is your app's startup order — binding the port only after the model loads means every endpoint (not just readiness-relevant ones) is unreachable during load. The more standard pattern is to start the HTTP server immediately, have /live return success right away, load the model in the background, and have /ready reflect model-load status. That would make /live and /ready behave independently as their names imply, though it's not required given the startupProbe workaround already resolves the crash loop.
+    - Setting up the Gateway API (Nginx Gateway Fabric) to access the service out of the cluster. 
+    For more information https://docs.nginx.com/nginx-gateway-fabric/get-started . 
+    The problem encounter - the NGF is timeout waiting for the responce, so the issue is fixed using Snippets filter. 
+
+
     
 
 
