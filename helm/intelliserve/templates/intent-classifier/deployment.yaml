@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intent-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: intent
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: intent
+  template:
+    metadata:
+      labels:
+        app: intent
+    spec:
+      containers:
+      - name: intent
+        image: "{{ .Values.intentClassifier.image }}:{{ .Values.intentClassifier.tag }}"
+        imagePullPolicy: {{ .Values.intentClassifier.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.intentClassifier.containerPort }}
+        envFrom:
+        - configMapRef:
+            name: intelliserve-config
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.configMap.CHECK_READINESS }}
+            port: {{ .Values.intentClassifier.port }}
+          initialDelaySeconds: {{ .Values.intentClassifier.initialDelaySeconds }}
+          periodSeconds: {{ .Values.intentClassifier.periodSeconds }}
+          failureThreshold: {{ .Values.intentClassifier.failureThreshold }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.configMap.CHECK_LIVENESS }}
+            port: {{ .Values.intentClassifier.port }}
+          initialDelaySeconds: {{ .Values.intentClassifier.initialDelaySeconds }}
+          periodSeconds: {{ .Values.intentClassifier.periodSeconds }}
+          failureThreshold: {{ .Values.intentClassifier.failureThreshold }}

@@ -1,0 +1,70 @@
+namespace: intelliserve
+replicas: 1
+hostname: "api.intelliserve.local"
+
+gatewayAPI:
+  image: api-gateway-api-gateway
+  tag: latest
+  imagePullPolicy: IfNotPresent
+  containerPort: 80
+  targetPort: 80
+  port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 8
+  proxySendTimeout: 400s
+  proxyReadTimeout: 400s
+  path: /api/v1/infer/
+
+inferenceEngine:
+  image: api-gateway-inference-engine
+  tag: latest
+  imagePullPolicy: IfNotPresent
+  containerPort: 80
+  targetPort: 80
+  port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 8
+  startupProbeFailureThreshold: 24
+
+intentClassifier:
+  image: api-gateway-intent-classifier
+  tag: latest
+  imagePullPolicy: IfNotPresent
+  containerPort: 80
+  targetPort: 80
+  port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 8
+
+redis:
+  image: redis
+  tag: latest
+  port: 6379
+  targetPort: 6379
+  redisCLI: redis-cli 
+  ping: ping
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+configMap:
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  INTENT_ENDPOINT: "http://intent-service/api/v1/intent"
+  INFERENCE_ENDPOINT: "http://inference-service/api/v1/inference"
+  GATEWAY_PATH: "/api/v1/infer/"
+  INFERENCE_PATH: "/api/v1/inference"
+  INTENT_PATH: "/api/v1/intent"
+  CHECK_READINESS: "/ready"
+  CHECK_LIVENESS: "/live"
+
+ResourceQuota:
+  requestscpu: "8"
+  requestsmemory: "6Gi"
+  limitscpu: "10"
+  limitsmemory: "7Gi"
+  
+
+

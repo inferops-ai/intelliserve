@@ -1,0 +1,11 @@
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: proxy-timeouts
+  namespace: {{ .Values.namespace }}
+spec:
+  snippets:
+    - context: http.server.location
+      value: |
+        proxy_send_timeout {{ .Values.gatewayAPI.proxySendTimeout }};
+        proxy_read_timeout {{ .Values.gatewayAPI.proxyReadTimeout }};

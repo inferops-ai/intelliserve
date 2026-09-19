@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: intelliserve-config 
+  namespace: {{ .Values.namespace }}
+data:
+  REDIS_HOST: {{ .Values.configMap.REDIS_HOST }}
+  REDIS_PORT: {{ .Values.configMap.REDIS_PORT }}
+  INTENT_ENDPOINT: {{ .Values.configMap.INTENT_ENDPOINT }}
+  INFERENCE_ENDPOINT: {{ .Values.configMap.INFERENCE_ENDPOINT }}
+  GATEWAY_PATH: {{ .Values.configMap.GATEWAY_PATH }}
+  INFERENCE_PATH: {{ .Values.configMap.INFERENCE_PATH }}
+  INTENT_PATH: {{ .Values.configMap.INTENT_PATH }}
+  CHECK_READINESS: {{ .Values.configMap.CHECK_READINESS }}
+  CHECK_LIVENESS: {{ .Values.configMap.CHECK_LIVENESS }}

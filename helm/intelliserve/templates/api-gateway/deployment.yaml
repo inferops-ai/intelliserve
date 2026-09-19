@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: gateway-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: gateway
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - name: gateway
+        image: "{{ .Values.gatewayAPI.image }}:{{ .Values.gatewayAPI.tag }}"
+        imagePullPolicy: {{ .Values.gatewayAPI.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.gatewayAPI.containerPort }}
+        envFrom:
+        - configMapRef:
+            name: intelliserve-config
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.configMap.CHECK_READINESS }}
+            port: {{ .Values.gatewayAPI.port }}
+          initialDelaySeconds: {{ .Values.gatewayAPI.initialDelaySeconds }}
+          periodSeconds: {{ .Values.gatewayAPI.periodSeconds }}
+          failureThreshold: {{ .Values.gatewayAPI.failureThreshold }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.configMap.CHECK_LIVENESS }}
+            port: {{ .Values.gatewayAPI.port }}
+          initialDelaySeconds: {{ .Values.gatewayAPI.initialDelaySeconds }}
+          periodSeconds: {{ .Values.gatewayAPI.periodSeconds }}
+          failureThreshold: {{ .Values.gatewayAPI.failureThreshold }}

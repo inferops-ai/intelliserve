@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: gateway
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: "{{ .Values.redis.image }}:{{ .Values.redis.tag }}"
+        ports:
+        - containerPort: {{ .Values.redis.port }}
+        readinessProbe:
+          exec:
+            command:
+              - {{ .Values.redis.redisCLI }} 
+              - {{ .Values.redis.ping }}
+          initialDelaySeconds: {{ .Values.redis.initialDelaySeconds }}
+          periodSeconds: {{ .Values.redis.periodSeconds }}
+        livenessProbe:
+          exec:
+            command:
+              - {{ .Values.redis.redisCLI }}
+              - {{ .Values.redis.ping }} 
+          initialDelaySeconds: {{ .Values.redis.initialDelaySeconds }}
+          periodSeconds: {{ .Values.redis.periodSeconds }}

@@ -253,6 +253,7 @@ Open source container orchestration engine to AUTOMATING DEPLOYEMNT, SCALING AND
     - Adding service so the pods can communicate, however, because of the way the application implemented only the GATEWAY api need to reach all the other services, the other services can not communicated with other, so I implmented a network policy so the services only needed to be access through the gateway api. (Ingress). For network policy to work I need to change the CNI(Container network interface) the default CNI in kuberenets does not have network policy so I install and config Calico 
     https://docs.tigera.io/calico/latest/getting-started/kubernetes/kind
     - Adding the readiness and livness probe for every services - but encounter problem. The problem and solution is listed below. 
+------------------------------------------------------------------------------------------------------------------
 Problem:
 Your inference pod was stuck in CrashLoopBackOff. The inference container needs 70-100 seconds to load LLaMA 3.2-1B and apply INT8 quantization, and during that entire window nothing was listening on port 80 — likely because your app starts the web server after the model finishes loading, rather than before. With only a livenessProbe configured (delay=5s period=5s failureThreshold=8, a ~45s budget), kubelet started hitting /live well before the server was up, got connection refused on every attempt, hit the failure threshold, and killed the container (exit code 137, SIGKILL) — restarting it and repeating the cycle indefinitely. Adding a readinessProbe alone didn't fix this, since readiness only pulls a pod from Service traffic on failure; it doesn't stop liveness from killing the container.
 
@@ -263,6 +264,7 @@ Open item worth addressing: the deeper cause is your app's startup order — bin
     - Setting up the Gateway API (Nginx Gateway Fabric) to access the service out of the cluster. 
     For more information https://docs.nginx.com/nginx-gateway-fabric/get-started . 
     The problem encounter - the NGF is timeout waiting for the responce, so the issue is fixed using Snippets filter. 
+------------------------------------------------------------------------------------------------------------------
 
 
     

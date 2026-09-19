@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-deployment
+  namespace: {{ .Values.namespace }}
+  labels: 
+    app: inference
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      labels:
+        app: inference
+    spec:
+      containers:
+      - name: inference
+        image: "{{ .Values.inferenceEngine.image }}:{{ .Values.inferenceEngine.tag }}"
+        imagePullPolicy: {{ .Values.inferenceEngine.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.inferenceEngine.containerPort }}
+        envFrom:
+        - configMapRef:
+            name: intelliserve-config
+        - secretRef:
+            name: inference-token-secret
+        startupProbe:
+          httpGet:
+            path: {{ .Values.configMap.CHECK_LIVENESS }}
+            port: {{ .Values.inferenceEngine.port }}
+          periodSeconds: {{ .Values.inferenceEngine.periodSeconds }}
+          failureThreshold: {{ .Values.inferenceEngine.startupProbeFailureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.configMap.CHECK_READINESS }}
+            port: {{ .Values.inferenceEngine.port }}
+          initialDelaySeconds: {{ .Values.inferenceEngine.initialDelaySeconds }}
+          periodSeconds: {{ .Values.inferenceEngine.periodSeconds }}
+          failureThreshold: {{ .Values.inferenceEngine.failureThreshold }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.config.CHECK_LIVENESS }}
+            port: {{ .Values.inferenceEngine.port }}
+          initialDelaySeconds: {{ .Values.inferenceEngine.initialDelaySeconds }}
+          periodSeconds: {{ .Values.inferenceEngine.periodSeconds }}
+          failureThreshold: {{ .Values.inferenceEngine.failureThreshold }}
