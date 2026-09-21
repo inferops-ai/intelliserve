@@ -46,10 +46,10 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           failureThreshold: 8
-        # resources:
-        #   requests:
-        #     cpu: "4"
-        #     memory: "2500Mi"
-        #   limits:
-        #     cpu: "6"
-        #     memory: "3Gi"
+        resources:
+          requests:
+            cpu: "7"
+            memory: "2500Mi"
+          limits:
+            cpu: "10"
+            memory: "3Gi"
