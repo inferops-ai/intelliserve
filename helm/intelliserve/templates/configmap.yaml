@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   REDIS_HOST: {{ .Values.configMap.REDIS_HOST }}
-  REDIS_PORT: {{ .Values.configMap.REDIS_PORT }}
+  REDIS_PORT: {{ .Values.configMap.REDIS_PORT | quote }}
   INTENT_ENDPOINT: {{ .Values.configMap.INTENT_ENDPOINT }}
   INFERENCE_ENDPOINT: {{ .Values.configMap.INFERENCE_ENDPOINT }}
   GATEWAY_PATH: {{ .Values.configMap.GATEWAY_PATH }}

@@ -1,6 +1,11 @@
 namespace: intelliserve
-replicas: 1
 hostname: "api.intelliserve.local"
+replicas: 1
+minReplicas: 1
+maxReplicas: 1
+target:
+  type: Utilization
+  averageUtilization: 50
 
 gatewayAPI:
   image: api-gateway-api-gateway
@@ -11,10 +16,14 @@ gatewayAPI:
   port: 80
   initialDelaySeconds: 5
   periodSeconds: 5
-  failureThreshold: 8
+  failureThreshold: 20
   proxySendTimeout: 400s
   proxyReadTimeout: 400s
   path: /api/v1/infer/
+  requestCpu: "30m"
+  requestMemory: "64Mi"
+  limitCpu: "60m"
+  limitMemory: "70Mi"
 
 inferenceEngine:
   image: api-gateway-inference-engine
@@ -27,6 +36,10 @@ inferenceEngine:
   periodSeconds: 5
   failureThreshold: 8
   startupProbeFailureThreshold: 24
+  requestCpu: "7"
+  requestMemory: "2500Mi"
+  limitCpu: "10"
+  limitMemory: "3Gi"
 
 intentClassifier:
   image: api-gateway-intent-classifier
@@ -38,6 +51,10 @@ intentClassifier:
   initialDelaySeconds: 5
   periodSeconds: 5
   failureThreshold: 8
+  requestCpu: "120m"
+  requestMemory: "350Mi"
+  limitCpu: "200m"
+  limitMemory: "400Mi"
 
 redis:
   image: redis
@@ -48,6 +65,10 @@ redis:
   ping: ping
   initialDelaySeconds: 5
   periodSeconds: 5
+  requestCpu: "10m"
+  requestMemory: "16Mi"
+  limitCpu: "50m"
+  limitMemory: "64Mi"
 
 configMap:
   REDIS_HOST: "redis-service"
@@ -63,8 +84,14 @@ configMap:
 ResourceQuota:
   requestscpu: "8"
   requestsmemory: "6Gi"
-  limitscpu: "10"
+  limitscpu: "12"
   limitsmemory: "7Gi"
+
+limitRange:
+  defaultLimitCpu: 100m
+  defaultLimitMemory: 128Mi
+  defaultRequestCpu: 50m
+  defaultRequestMemory: 64Mi  
   
 
 

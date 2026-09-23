@@ -4,7 +4,7 @@ metadata:
   name: redis
   namespace: {{ .Values.namespace }}
   labels:
-    app: gateway
+    app: redis
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -34,3 +34,10 @@ spec:
               - {{ .Values.redis.ping }} 
           initialDelaySeconds: {{ .Values.redis.initialDelaySeconds }}
           periodSeconds: {{ .Values.redis.periodSeconds }}
+        resources:
+          requests: 
+            cpu: {{ .Values.redis.requestCpu }}
+            memory: {{ .Values.redis.requestMemory }}
+          limits:
+            cpu: {{ .Values.redis.limitCpu }}
+            memory: {{ .Values.redis.limitMemory }}

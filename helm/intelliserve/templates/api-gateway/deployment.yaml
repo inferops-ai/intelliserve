@@ -6,7 +6,6 @@ metadata:
   labels:
     app: gateway
 spec:
-  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: gateway
@@ -38,3 +37,10 @@ spec:
           initialDelaySeconds: {{ .Values.gatewayAPI.initialDelaySeconds }}
           periodSeconds: {{ .Values.gatewayAPI.periodSeconds }}
           failureThreshold: {{ .Values.gatewayAPI.failureThreshold }}
+        resources:
+          requests: 
+            cpu: {{ .Values.gatewayAPI.requestCpu }}
+            memory: {{ .Values.gatewayAPI.requestMemory }}
+          limits:
+            cpu: {{ .Values.gatewayAPI.limitCpu }}
+            memory: {{ .Values.gatewayAPI.limitMemory }}

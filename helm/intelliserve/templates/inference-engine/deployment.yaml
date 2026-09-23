@@ -41,8 +41,15 @@ spec:
           failureThreshold: {{ .Values.inferenceEngine.failureThreshold }}
         livenessProbe:
           httpGet:
-            path: {{ .Values.config.CHECK_LIVENESS }}
+            path: {{ .Values.configMap.CHECK_LIVENESS }}
             port: {{ .Values.inferenceEngine.port }}
           initialDelaySeconds: {{ .Values.inferenceEngine.initialDelaySeconds }}
           periodSeconds: {{ .Values.inferenceEngine.periodSeconds }}
           failureThreshold: {{ .Values.inferenceEngine.failureThreshold }}
+        resources:
+          requests: 
+            cpu: {{ .Values.inferenceEngine.requestCpu | quote }}
+            memory: {{ .Values.inferenceEngine.requestMemory }}
+          limits:
+            cpu: {{ .Values.inferenceEngine.limitCpu | quote }}
+            memory: {{ .Values.inferenceEngine.limitMemory }}
