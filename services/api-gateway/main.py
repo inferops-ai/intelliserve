@@ -54,9 +54,9 @@ async def intent_responce(prompt):
     try:
         #Call the intent classifier endpoint to get the intent 
         async with httpx.AsyncClient(timeout=300.0) as client:
-            intent_responce = await client.post(os.getenv("INTENT_ENDPOINT"), json={"prompt":prompt})
-        intent_responce = intent_responce.json()
-        return intent_responce
+            responce = await client.post(os.getenv("INTENT_ENDPOINT"), json={"prompt":prompt})
+        final_responce = responce.json()
+        return final_responce
     except httpx.TimeoutException:
         raise HTTPException(status_code=504, detail="Intent service timed out")
     except httpx.HTTPError as e:
@@ -80,13 +80,13 @@ async def create_body(body: Request):
         else:
             start_time = time.time()
             
-            intent_responce = await intent_responce(prompt) 
+            intent_responce_output = await intent_responce(prompt) 
             
             async with httpx.AsyncClient(timeout=300.0) as client:
                 inference_responce = await client.post(os.getenv("INFERENCE_ENDPOINT"), json={
                     "model": body.model,
                     "prompt": body.prompt,
-                    "intent_classifier": intent_responce['intent'],
+                    "intent_classifier": intent_responce_output['intent'],
                     "parameters":{
                         "max_tokens": body.parameters.max_tokens,
                         "temperature": body.parameters.temperature,
@@ -101,8 +101,8 @@ async def create_body(body: Request):
                 'status': 'completed',
                 'prompt': prompt,
                 'response': inference_responce['response'],
-                'intent': intent_responce['intent'],
-                'confidence': intent_responce['confidence'],
+                'intent': intent_responce_output['intent'],
+                'confidence': intent_responce_output['confidence'],
                 'model': body.model,
                 "prompt_tokens": inference_responce['usage']['prompt_tokens'],
                 "completion_tokens": inference_responce['usage']['completion_tokens'],
