@@ -37,10 +37,10 @@ spec:
           initialDelaySeconds: {{ .Values.intentClassifier.initialDelaySeconds }}
           periodSeconds: {{ .Values.intentClassifier.periodSeconds }}
           failureThreshold: {{ .Values.intentClassifier.failureThreshold }}
-        resources:
-          requests: 
-            cpu: {{ .Values.intentClassifier.requestCpu }}
-            memory: {{ .Values.intentClassifier.requestMemory }}
-          limits:
-            cpu: {{ .Values.intentClassifier.limitCpu }}
-            memory: {{ .Values.intentClassifier.limitMemory }}
+        # resources:
+        #   requests: 
+        #     cpu: {{ .Values.intentClassifier.requestCpu }}
+        #     memory: {{ .Values.intentClassifier.requestMemory }}
+        #   limits:
+        #     cpu: {{ .Values.intentClassifier.limitCpu }}
+        #     memory: {{ .Values.intentClassifier.limitMemory }}

@@ -34,7 +34,7 @@ inferenceEngine:
   port: 80
   initialDelaySeconds: 5
   periodSeconds: 5
-  failureThreshold: 8
+  failureThreshold: 24
   startupProbeFailureThreshold: 24
   requestCpu: "7"
   requestMemory: "2500Mi"

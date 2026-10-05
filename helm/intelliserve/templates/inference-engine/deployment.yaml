@@ -46,10 +46,10 @@ spec:
           initialDelaySeconds: {{ .Values.inferenceEngine.initialDelaySeconds }}
           periodSeconds: {{ .Values.inferenceEngine.periodSeconds }}
           failureThreshold: {{ .Values.inferenceEngine.failureThreshold }}
-        resources:
-          requests: 
-            cpu: {{ .Values.inferenceEngine.requestCpu | quote }}
-            memory: {{ .Values.inferenceEngine.requestMemory }}
-          limits:
-            cpu: {{ .Values.inferenceEngine.limitCpu | quote }}
-            memory: {{ .Values.inferenceEngine.limitMemory }}
+        # resources:
+        #   requests: 
+        #     cpu: {{ .Values.inferenceEngine.requestCpu | quote }}
+        #     memory: {{ .Values.inferenceEngine.requestMemory }}
+        #   limits:
+        #     cpu: {{ .Values.inferenceEngine.limitCpu | quote }}
+        #     memory: {{ .Values.inferenceEngine.limitMemory }}

@@ -34,10 +34,10 @@ spec:
               - {{ .Values.redis.ping }} 
           initialDelaySeconds: {{ .Values.redis.initialDelaySeconds }}
           periodSeconds: {{ .Values.redis.periodSeconds }}
-        resources:
-          requests: 
-            cpu: {{ .Values.redis.requestCpu }}
-            memory: {{ .Values.redis.requestMemory }}
-          limits:
-            cpu: {{ .Values.redis.limitCpu }}
-            memory: {{ .Values.redis.limitMemory }}
+        # resources:
+        #   requests: 
+        #     cpu: {{ .Values.redis.requestCpu }}
+        #     memory: {{ .Values.redis.requestMemory }}
+        #   limits:
+        #     cpu: {{ .Values.redis.limitCpu }}
+        #     memory: {{ .Values.redis.limitMemory }}
