@@ -35,7 +35,7 @@ inferenceEngine:
   initialDelaySeconds: 5
   periodSeconds: 5
   failureThreshold: 24
-  startupProbeFailureThreshold: 24
+  startupProbeFailureThreshold: 120
   requestCpu: "7"
   requestMemory: "2500Mi"
   limitCpu: "10"

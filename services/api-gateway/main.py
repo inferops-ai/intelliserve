@@ -144,14 +144,11 @@ def check_ready():
     if checking_redis():
         return { "status":"ok"}
     else:
-        raise HTTPException(status_code=503, detail="Model is not loaded yet")
+        raise HTTPException(status_code=503, detail="Redis is not loaded yet")
     
 #Liveness probe 
 @app.get(os.getenv("CHECK_LIVENESS"))
 def check_health():
-    return {
-        "status": "ok"
-    }
-    
-
+    return { "status":"ok" }
+   
 

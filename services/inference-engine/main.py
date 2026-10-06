@@ -69,7 +69,4 @@ def check_ready():
 # Liveness probe
 @app.get(os.getenv("CHECK_LIVENESS"))
 def check_health():
-    return {
-        "status":"ok",
-        "model":"Llama-inference-engine"
-    }
+    return { "status":"ok", "model":"Llama-inference-engine" }

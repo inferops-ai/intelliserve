@@ -32,16 +32,10 @@ async def get_classify(body: Request):
 @app.get(os.getenv("CHECK_READINESS"))
 def check_ready():
     if model_ready:
-        return {
-            "status":"ok",
-            "model":"distilbert-intent-classifier" 
-        }
+        return { "status":"ok", "model":"distilbert-intent-classifier" }
     else:
         raise HTTPException(status_code=503, detail="Model is not loaded yet")
 
 @app.get(os.getenv("CHECK_LIVENESS"))
 def check_health():
-    return {
-        "status":"ok",
-        "model":"distilbert-intent-classifier"
-    }
+    return { "status":"ok", "model":"distilbert-intent-classifier" }

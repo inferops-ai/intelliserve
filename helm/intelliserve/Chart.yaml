@@ -1,4 +1,4 @@
-apiVersion: v3
+apiVersion: v2
 name: intelliserve
 description: Self-hosted microservice AI inference engine on Kubernetes 
 type: application
