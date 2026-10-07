@@ -8,9 +8,16 @@ from pathlib import Path
 import redis.asyncio as redis
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
+
+#Add a prometheus middleware to expose the metrics 
+#Exclude the readiness and liveness probes (kuberentes check) and metrics itself
+Instrumentator(should_instrument_requests_inprogress=True, 
+                excluded_handlers=[os.getenv("CHECK_READINESS"), os.getenv("CHECK_LIVENESS"), "/metrics"]).instrument(app).expose(app)
+
 #Connect with redis
 client_redis = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
 
