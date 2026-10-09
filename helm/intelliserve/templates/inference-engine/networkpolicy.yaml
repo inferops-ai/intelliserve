@@ -14,3 +14,14 @@ spec:
         - podSelector:
             matchLabels:
               app: gateway  
+{{- if .Values.prometheus.enabled }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.prometheus.namespace }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.prometheus.podLabels | nindent 14 }}
+      ports:
+        - port: {{ .Values.prometheus.port }}
+{{- end }} 

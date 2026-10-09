@@ -1,0 +1,37 @@
+####Resource limit for prometheus pod
+server:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+scrapeConfigs:
+  ######Adding all three services so it can be scraped by prometheus
+  api-gateway:
+    enabled: true
+    job_name: api-gateway
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - gateway-service.intelliserve.svc.cluster.local:80
+  inference-engine:
+    enabled: true
+    job_name: inference-engine
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - inference-service.intelliserve.svc.cluster.local:80
+  intent-classifier:
+    enabled: true
+    job_name: intent-classifier
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - intent-service.intelliserve.svc.cluster.local:80
+  
+  

@@ -94,4 +94,13 @@ limitRange:
   defaultRequestMemory: 64Mi  
   
 
+prometheus:
+  enabled: true
+  namespace: monitoring
+  port: 80
+  podLabels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/name: prometheus
+    
 
