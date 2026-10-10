@@ -33,5 +33,12 @@ scrapeConfigs:
     static_configs:
       - targets:
           - intent-service.intelliserve.svc.cluster.local:80
-  
+  redis:
+    enabled: true
+    job_name: redis
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs: 
+      - targets:
+          - redis-exporter-prometheus-redis-exporter:9121
   

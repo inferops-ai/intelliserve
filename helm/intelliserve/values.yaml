@@ -102,5 +102,13 @@ prometheus:
     app.kubernetes.io/component: server
     app.kubernetes.io/instance: prometheus
     app.kubernetes.io/name: prometheus
+
+redis_exporter:
+  podLabels:
+    app.kubernetes.io/instance: redis-exporter
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: prometheus-redis-exporter
+    app.kubernetes.io/version: v1.93.0
+    helm.sh/chart: prometheus-redis-exporter-6.33.0
     
 
