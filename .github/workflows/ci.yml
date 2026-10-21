@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies 
         run: pip install -r services/inference-engine/requirements.txt
 
-      - name: Run gateway tests
+      - name: Run inference tests
         run: python -m pytest tests/inference_test/ -v 
 
   intent-classifier:
@@ -64,5 +64,5 @@ jobs:
       - name: Install dependencies 
         run: pip install -r services/intent-classifier/requirements-inference.txt
 
-      - name: Run gateway tests
+      - name: Run intent tests
         run: python -m pytest tests/intent_test/ -v 
