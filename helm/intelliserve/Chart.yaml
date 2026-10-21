@@ -1,0 +1,6 @@
+apiVersion: v2
+name: intelliserve
+description: Self-hosted microservice AI inference engine on Kubernetes 
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

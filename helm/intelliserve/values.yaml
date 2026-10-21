@@ -1,0 +1,114 @@
+namespace: intelliserve
+hostname: "api.intelliserve.local"
+replicas: 1
+minReplicas: 1
+maxReplicas: 1
+target:
+  type: Utilization
+  averageUtilization: 50
+
+gatewayAPI:
+  image: api-gateway-api-gateway
+  tag: latest
+  imagePullPolicy: IfNotPresent
+  containerPort: 80
+  targetPort: 80
+  port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 20
+  proxySendTimeout: 400s
+  proxyReadTimeout: 400s
+  path: /api/v1/infer/
+  requestCpu: "30m"
+  requestMemory: "64Mi"
+  limitCpu: "60m"
+  limitMemory: "70Mi"
+
+inferenceEngine:
+  image: api-gateway-inference-engine
+  tag: latest
+  imagePullPolicy: IfNotPresent
+  containerPort: 80
+  targetPort: 80
+  port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 24
+  startupProbeFailureThreshold: 120
+  requestCpu: "7"
+  requestMemory: "2500Mi"
+  limitCpu: "10"
+  limitMemory: "3Gi"
+
+intentClassifier:
+  image: api-gateway-intent-classifier
+  tag: latest
+  imagePullPolicy: IfNotPresent
+  containerPort: 80
+  targetPort: 80
+  port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 8
+  requestCpu: "120m"
+  requestMemory: "350Mi"
+  limitCpu: "200m"
+  limitMemory: "400Mi"
+
+redis:
+  image: redis
+  tag: latest
+  port: 6379
+  targetPort: 6379
+  redisCLI: redis-cli 
+  ping: ping
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  requestCpu: "10m"
+  requestMemory: "16Mi"
+  limitCpu: "50m"
+  limitMemory: "64Mi"
+
+configMap:
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  INTENT_ENDPOINT: "http://intent-service/api/v1/intent"
+  INFERENCE_ENDPOINT: "http://inference-service/api/v1/inference"
+  GATEWAY_PATH: "/api/v1/infer/"
+  INFERENCE_PATH: "/api/v1/inference"
+  INTENT_PATH: "/api/v1/intent"
+  CHECK_READINESS: "/ready"
+  CHECK_LIVENESS: "/live"
+
+ResourceQuota:
+  requestscpu: "8"
+  requestsmemory: "6Gi"
+  limitscpu: "12"
+  limitsmemory: "7Gi"
+
+limitRange:
+  defaultLimitCpu: 100m
+  defaultLimitMemory: 128Mi
+  defaultRequestCpu: 50m
+  defaultRequestMemory: 64Mi  
+  
+
+prometheus:
+  enabled: true
+  namespace: monitoring
+  port: 80
+  podLabels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/name: prometheus
+
+redis_exporter:
+  podLabels:
+    app.kubernetes.io/instance: redis-exporter
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: prometheus-redis-exporter
+    app.kubernetes.io/version: v1.93.0
+    helm.sh/chart: prometheus-redis-exporter-6.33.0
+    
+

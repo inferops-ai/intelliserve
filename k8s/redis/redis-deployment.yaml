@@ -34,11 +34,11 @@ spec:
               - ping 
           initialDelaySeconds: 5
           periodSeconds: 5
-        # resources:
-        #   requests:
-        #     cpu: "10m"
-        #     memory: "16Mi"
-        #   limits:
-        #     cpu: "50m"
-        #     memory: "64Mi"
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "16Mi"
+          limits:
+            cpu: "50m"
+            memory: "64Mi"
         

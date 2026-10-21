@@ -6,7 +6,6 @@ metadata:
   labels:
     app: gateway
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: gateway
@@ -30,18 +29,18 @@ spec:
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
-          failureThreshold: 8
+          failureThreshold: 20
         livenessProbe:
           httpGet:
             path: /live
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
-          failureThreshold: 8
-        # resources:
-        #   requests: 
-        #     cpu: "50m"
-        #     memory: "64Mi"
-        #   limits:
-        #     cpu: "500m"
-        #     memory: "256Mi"
+          failureThreshold: 20
+        resources:
+          requests: 
+            cpu: "5m"
+            memory: "64Mi"
+          limits:
+            cpu: "30m"
+            memory: "70Mi"

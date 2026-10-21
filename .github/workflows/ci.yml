@@ -1,0 +1,68 @@
+name: Intelliserve CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+      branches:
+        - main
+  workflow_dispatch:
+
+jobs:
+  api-gateway:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository 
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/api-gateway/requirements.txt
+      
+      - name: Install dependencies 
+        run: pip install -r services/api-gateway/requirements.txt
+
+      - name: Run gateway tests
+        run: python -m pytest tests/gateway_test/ -v 
+  
+  inference-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/inference-engine/requirements.txt
+      
+      - name: Install dependencies 
+        run: pip install -r services/inference-engine/requirements.txt
+
+      - name: Run inference tests
+        run: python -m pytest tests/inference_test/ -v 
+
+  intent-classifier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/intent-classifier/requirements-inference.txt
+      
+      - name: Install dependencies 
+        run: pip install -r services/intent-classifier/requirements-inference.txt
+
+      - name: Run intent tests
+        run: python -m pytest tests/intent_test/ -v 

@@ -6,7 +6,6 @@ metadata:
   labels:
     app: intent
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: intent
@@ -38,11 +37,11 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           failureThreshold: 8
-        # resources:
-        #   requests: 
-        #     cpu: "600m"
-        #     memory: "400Mi"
-        #   limits:
-        #     cpu: "700m"
-        #     memory: "512Mi"
+        resources:
+          requests: 
+            cpu: "120m"
+            memory: "350Mi"
+          limits:
+            cpu: "200m"
+            memory: "400Mi"
 

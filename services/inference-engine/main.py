@@ -7,9 +7,16 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from model_loader import inference_engine, model_ready
 from inference import inference_template
+from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 app = FastAPI()
+
+#Add a prometheus middleware to expose the metrics 
+#Exclude the readiness and liveness probes (kuberentes check) and metrics itself
+Instrumentator(should_instrument_requests_inprogress=True, 
+                excluded_handlers=[os.getenv("CHECK_READINESS"), os.getenv("CHECK_LIVENESS"), "/metrics"]).instrument(app).expose(app)
+
 
 #Help accept multiple request - single thread with concurrent exe
 request_lock = asyncio.Lock()
@@ -69,7 +76,4 @@ def check_ready():
 # Liveness probe
 @app.get(os.getenv("CHECK_LIVENESS"))
 def check_health():
-    return {
-        "status":"ok",
-        "model":"Llama-inference-engine"
-    }
+    return { "status":"ok", "model":"Llama-inference-engine" }
