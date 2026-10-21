@@ -6,7 +6,7 @@ COPY ./requirements-inference.txt /intent_classifier/requirements-inference.txt
 
 RUN pip install --no-cache-dir --upgrade -r /intent_classifier/requirements-inference.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
-COPY ./models/intent-classifier /intent_classifier/models/intent-classifier
+COPY ./models/intent-classifier ./models/intent-classifier
 
 COPY . /intent_classifier
 

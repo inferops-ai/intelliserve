@@ -60,3 +60,4 @@ uvloop==0.22.1
 watchfiles==1.1.1
 websockets==16.0
 prometheus-fastapi-instrumentator==8.1.0
+pytest==9.1.1
